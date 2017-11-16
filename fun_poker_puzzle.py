@@ -4,7 +4,7 @@ HAND_SIZE = 5
 LOWEST_RANK = 10
 POKER_HAND_RANK = {1: "royal-flush", 2: "straight-flush", 3: "four-of-a-kind", 4: "full-house", 5: "flush",
                    6: "straight",
-                   7: "three-of-a-kind", 8: "two-pair", 9: "pair", 10: "high-card"}
+                   7: "three-of-a-kind", 8: "two-pairs", 9: "one-pair", 10: "highest-card"}
 
 
 def get_value_of_card(val):
@@ -31,6 +31,8 @@ def is_flush(sorted_hand):
 
 def is_straight(sorted_hand):
     for i in range(HAND_SIZE):
+        if sorted_hand[0][0] == 2 and i + 1 == HAND_SIZE and sorted_hand[HAND_SIZE - 1][0] == 14:
+            return True
         if sorted_hand[i][0] != sorted_hand[0][0] + i:
             return False
     return True
@@ -102,8 +104,8 @@ def is_pair(sorted_hand):
 
 def get_current_hand(hand):
     sorted_hand = sorted(hand, key=itemgetter(0))
-    if is_royal_flash(sorted_hand):
-        return 1
+    # if is_royal_flash(sorted_hand):
+    #     return 1
     if is_straight_flush(sorted_hand):
         return 2
     if is_four_of_a_kind(sorted_hand):
@@ -146,18 +148,25 @@ def main(data):
     ans = LOWEST_RANK
     for i in range(HAND_SIZE + 1):
         ans = min(ans, get_rank(rendered_data, i, 0, 0, []))
-    ret = 'hand: '
+    ret = 'Hand: '
     # print('hand: ',end='')
     for i in range(HAND_SIZE):
         ret += data[i] + ' '
-    ret += 'deck: '
+    ret += 'Deck: '
     for i in range(HAND_SIZE):
         ret += data[HAND_SIZE + i] + ' '
-    ret += 'highest: ' + POKER_HAND_RANK[ans]
+    ret += 'Best hand: ' + POKER_HAND_RANK[ans]
 
     return ret
 
 
 if __name__ == '__main__':
-    original_data = input().strip().split()
-    print(main(original_data))
+    while True:
+        try:
+            original_data = input()
+            if original_data == '':
+                break
+            original_data = original_data.strip().split()
+            print(main(original_data))
+        except:
+            break
